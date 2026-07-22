@@ -6,7 +6,7 @@ function rotaProtegida(req, res, next){
         let token = auth.split(" ")[1];
         jwt.verify(token, process.env.SEGREDO, (error) => {
             if(error){
-                res.json({
+                res.status(401).json({
                     mensagem: "Token inválido"
                 })
                 return
@@ -14,7 +14,7 @@ function rotaProtegida(req, res, next){
             next()
         })
     }else{
-        res.json({
+        res.status(401).json({
             mensagem: "Token é obrigatório"
         })
     }
