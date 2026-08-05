@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const usuarioRoutes = require("./src/routes/usuarioRoutes");
+const categoriaRoutes = require("./src/routes/categoriaRoutes");
+const unidadeRoutes = require("./src/routes/unidadeRoutes");
+const interessadoRoutes = require("./src/routes/interessadoRoutes");
 const { login } = require("./src/controllers/usuarioController");
 const { rotaProtegida } = require("./src/middlewares");
 
@@ -20,6 +23,9 @@ app.get("/", (req, res) => {
 app.post("/login", login);
 
 app.use("/usuarios", rotaProtegida, usuarioRoutes);
+app.use("/categorias", categoriaRoutes);
+app.use("/unidades", unidadeRoutes);
+app.use("/interessados", interessadoRoutes);
 
 
 // quando a rota não for encontrada cai aqui
