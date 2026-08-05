@@ -4,6 +4,7 @@ const usuarioRoutes = require("./src/routes/usuarioRoutes");
 const categoriaRoutes = require("./src/routes/categoriaRoutes");
 const unidadeRoutes = require("./src/routes/unidadeRoutes");
 const interessadoRoutes = require("./src/routes/interessadoRoutes");
+const depoimentoRoutes = require("./src/routes/depoimentoRoutes");
 const { login } = require("./src/controllers/usuarioController");
 const { rotaProtegida } = require("./src/middlewares");
 
@@ -26,6 +27,8 @@ app.use("/usuarios", rotaProtegida, usuarioRoutes);
 app.use("/categorias", categoriaRoutes);
 app.use("/unidades", unidadeRoutes);
 app.use("/interessados", interessadoRoutes);
+app.use("/depoimentos", depoimentoRoutes);
+app.use("/uploads", express.static("./src/uploads"));
 
 
 // quando a rota não for encontrada cai aqui
