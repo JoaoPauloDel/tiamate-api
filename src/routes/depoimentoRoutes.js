@@ -8,8 +8,7 @@ const storage = multer.diskStorage({
         cb(null, `${timestamp}-${file.originalname}`);
     }
 });
-const upload = multer({ storage: storage });
-
+const upload = multer({ storage });
 const router = require("express").Router();
 
 router.get("/", buscar);

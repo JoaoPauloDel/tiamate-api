@@ -1,10 +1,8 @@
 const { PRISMACLIENT } = require("../services");
 
+
 async function buscar(req, res) {
     try {
-
-
-
         const linhas = await PRISMACLIENT.depoimentos.findMany({
             orderBy: {
                 id: "asc"
@@ -27,7 +25,7 @@ async function criar(req, res) {
                 nome: dados.nome,
                 texto: dados.texto,
                 estrelas: Number(dados.estrelas),
-                imagem:`${req.protocol}://${req.headers("host")}/uploads/depoimentos/${arquivo.filename}`
+                imagem: `${req.protocol}://${req.headers.host}/uploads/depoimentos/${arquivo.filename}`
             }
         });
 
