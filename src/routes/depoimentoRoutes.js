@@ -13,8 +13,8 @@ const upload = multer({ storage });
 const router = require("express").Router();
 
 router.get("/", buscar);
+router.post("/:id", rotaProtegida, upload.single('imagem'), editar);
 router.post("/", rotaProtegida, upload.single('imagem'), criar);
-router.put("/:id", rotaProtegida, editar);
 router.delete("/:id", rotaProtegida, deletar);
 
 module.exports = router;
