@@ -76,7 +76,7 @@ async function deletar(req, res) {
         })
 
         if(existe > 0){
-            await PRISMACLIENT.categorias.delete({
+            await PRISMACLIENT.categorias["delete"]({
                 where: {
                     id: Number(req.params.id)
                 }
