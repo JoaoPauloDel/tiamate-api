@@ -170,7 +170,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\francisco.rocha\\Documents\\tiamate-api\\src\\generated\\prisma",
+      "value": "C:\\Users\\João Paulo Del V\\Documents\\GitHub\\tiamate-api\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -184,11 +184,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\francisco.rocha\\Documents\\tiamate-api\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\João Paulo Del V\\Documents\\GitHub\\tiamate-api\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../../.env"
   },
   "relativePath": "../../../prisma",
