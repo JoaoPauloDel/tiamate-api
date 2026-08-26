@@ -5,8 +5,12 @@ const categoriaRoutes = require("./src/routes/categoriaRoutes");
 const unidadeRoutes = require("./src/routes/unidadeRoutes");
 const interessadoRoutes = require("./src/routes/interessadoRoutes");
 const depoimentoRoutes = require("./src/routes/depoimentoRoutes");
+const produtoRoutes = require("./src/routes/produtoRoutes");
 const { login } = require("./src/controllers/usuarioController");
 const { rotaProtegida } = require("./src/middlewares");
+
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./src/docs/swagger-output.json');
 
 const app = express();
 
@@ -16,10 +20,9 @@ app.use(express.json()); // transforma o corpo da requisição de json para js
 
 
 app.get("/", (req, res) => {
-    res.json({
-        mensagem: "Olá mundo"
-    });
+    res.redirect("/docs")
 });
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.post("/login", login);
 
@@ -28,6 +31,7 @@ app.use("/categorias", categoriaRoutes);
 app.use("/unidades", unidadeRoutes);
 app.use("/interessados", interessadoRoutes);
 app.use("/depoimentos", depoimentoRoutes);
+app.use("/produtos", produtoRoutes);
 app.use("/uploads", express.static("./src/uploads"));
 
 

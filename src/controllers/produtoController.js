@@ -1,10 +1,14 @@
 const { PRISMACLIENT } = require("../services");
 
+
 async function buscar(req, res) {
     try {
         const linhas = await PRISMACLIENT.produtos.findMany({
             orderBy: {
                 id: "asc"
+            },
+            include:{
+                categorias: true
             }
         });
         res.status(200).json(linhas);
@@ -18,8 +22,19 @@ async function buscar(req, res) {
 async function criar(req, res) {
     try {
         let dados = req.body;
+        let arquivo = req.file;
+
+        const dadosCriacao = {
+            nome: dados.nome,
+            categoria_id: Number(dados.categoria_id)
+        };
+
+        if (arquivo) {
+            dadosCriacao.imagem = `${req.protocol}://${req.headers.host}/uploads/produtos/${arquivo.filename}`;
+        }
+
         const linha = await PRISMACLIENT.produtos.create({
-            data: dados
+            data: dadosCriacao
         });
 
         if (linha.id) {
@@ -42,11 +57,22 @@ async function criar(req, res) {
 async function editar(req, res) {
     try {
         let dados = req.body;
+        let arquivo = req.file;
+
+        const dadosAtualizacao = {
+            nome: dados.nome,
+            categoria_id: Number(dados.categoria_id)
+        };
+
+        if (arquivo) {
+            dadosAtualizacao.imagem = `${req.protocol}://${req.headers.host}/uploads/produtos/${arquivo.filename}`;
+        }
+
         const linha = await PRISMACLIENT.produtos.update({
-            data: dados,
             where: {
                 id: Number(req.params.id)
-            }
+            },
+            data: dadosAtualizacao
         });
 
         if (linha.id) {

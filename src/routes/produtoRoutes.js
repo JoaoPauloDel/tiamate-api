@@ -1,9 +1,9 @@
-const { buscar, criar, editar, deletar } = require("../controllers/depoimentoController");
+const { buscar, criar, editar, deletar } = require("../controllers/produtoController");
 const { rotaProtegida } = require("../middlewares");
 
 const multer = require("multer");
 const storage = multer.diskStorage({
-    destination: 'src/uploads/depoimentos/',
+    destination: 'src/uploads/produtos/',
     filename: (req, file, cb) => {
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
         cb(null, `${timestamp}-${file.originalname}`);
