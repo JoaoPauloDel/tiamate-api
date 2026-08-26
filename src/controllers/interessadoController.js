@@ -76,7 +76,7 @@ async function deletar(req, res) {
         })
 
         if(existe > 0){
-            await PRISMACLIENT.interessados.delete({
+            await PRISMACLIENT.interessados["delete"]({
                 where: {
                     id: Number(req.params.id)
                 }

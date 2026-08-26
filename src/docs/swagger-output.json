@@ -15,14 +15,18 @@
       "get": {
         "description": "",
         "responses": {
-          "200": {
-            "description": "OK"
+          "default": {
+            "description": ""
           }
         }
       }
     },
     "/login": {
       "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Autentica um usuario",
         "description": "",
         "parameters": [
           {
@@ -43,16 +47,48 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Usuário autenticado ou Email ou senha incorretos.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Usuário autenticado"
+                },
+                "token": {
+                  "type": "string",
+                  "example": "jwt-token"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/usuarios/": {
       "get": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Lista os usuarios",
         "description": "",
         "parameters": [
           {
@@ -63,17 +99,68 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Usuarios retornados com sucesso.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "nome": {
+                    "type": "string",
+                    "example": "Maria Silva"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "maria@email.com"
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token é obrigatório ou Token inválido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token inválido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
       "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Cria um usuario",
         "description": "",
         "parameters": [
           {
@@ -84,44 +171,110 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
-                "senha": {
-                  "example": "any"
+                "nome": {
+                  "type": "string",
+                  "example": "Maria Silva"
                 },
                 "email": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "maria@email.com"
+                },
+                "senha": {
+                  "type": "string",
+                  "example": "senha-segura"
                 }
-              }
+              },
+              "required": [
+                "nome",
+                "email",
+                "senha"
+              ]
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Email já cadastrado ou Falha ao criar registro.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Email já cadastrado"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "201": {
-            "description": "Created"
+            "description": "Registro criado com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro criado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token é obrigatório ou Token inválido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token inválido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/usuarios/{id}": {
       "put": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Atualiza um usuario",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int32",
+            "description": "ID do usuario"
           },
           {
             "name": "authorization",
@@ -131,11 +284,21 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
+                "nome": {
+                  "type": "string",
+                  "example": "Maria Silva"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "maria.nova@email.com"
+                },
                 "senha": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "nova-senha"
                 }
               }
             }
@@ -143,27 +306,81 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Falha ao atualizar registro.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Falha ao atualizar registro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "201": {
-            "description": "Created"
+            "description": "Registro atualizado com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro atualizado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token é obrigatório ou Token inválido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token inválido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
       "delete": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Exclui um usuario",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int32",
+            "description": "ID do usuario"
           },
           {
             "name": "authorization",
@@ -173,54 +390,59 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Registro apagado com sucesso ou Registro já foi apagado.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro apagado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token é obrigatório ou Token inválido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token inválido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/usuarios/{{where{id:Number(req.params.id)}});res.status(200).json({mensagem:Registroapagadocomsucesso});}else{res.status(200).json({mensagem:Registrojáfoiapagado});}}catch(error){res.status(500).json({mensagem:Error:${error.message}});}}functionlogin(req}": {
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "{where{id:Number(req.params.id)}});res.status(200).json({mensagem:Registroapagadocomsucesso});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "res.status(200).json({mensagem:Registrojáfoiapagado});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "res.status(500).json({mensagem:Error:${error.message}});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/categorias/": {
       "get": {
+        "tags": [
+          "Categorias"
+        ],
+        "summary": "Lista as categorias",
         "description": "",
         "parameters": [
           {
@@ -231,80 +453,255 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Categorias retornadas com sucesso.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "nome": {
+                    "type": "string",
+                    "example": "Bebidas"
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
       "post": {
+        "tags": [
+          "Categorias"
+        ],
+        "summary": "Cria uma categoria",
         "description": "",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nome": {
+                  "type": "string",
+                  "example": "Bebidas"
+                }
+              },
+              "required": [
+                "nome"
+              ]
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Falha ao criar registro.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Falha ao criar registro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "201": {
-            "description": "Created"
+            "description": "Registro criado com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro criado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token e obrigatorio ou Token invalido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token invalido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/categorias/{id}": {
       "put": {
+        "tags": [
+          "Categorias"
+        ],
+        "summary": "Atualiza uma categoria",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int32"
           },
           {
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nome": {
+                  "type": "string",
+                  "example": "Bebidas"
+                }
+              },
+              "required": [
+                "nome"
+              ]
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Falha ao atualizar registro.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Falha ao atualizar registro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "201": {
-            "description": "Created"
+            "description": "Registro atualizado com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro atualizado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token e obrigatorio ou Token invalido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token invalido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
       "delete": {
+        "tags": [
+          "Categorias"
+        ],
+        "summary": "Exclui uma categoria",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int32"
           },
           {
             "name": "authorization",
@@ -314,60 +711,59 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Registro apagado com sucesso ou Registro ja foi apagado.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro apagado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token e obrigatorio ou Token invalido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token invalido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/categorias/{{where{id:Number(req.params.id)}});res.status(200).json({mensagem:Registroapagadocomsucesso});}else{res.status(200).json({mensagem:Registrojáfoiapagado});}}catch(error){res.status(500).json({mensagem:Error:${error.message}});}}module.exports={buscar}": {
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "{where{id:Number(req.params.id)}});res.status(200).json({mensagem:Registroapagadocomsucesso});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "res.status(200).json({mensagem:Registrojáfoiapagado});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "res.status(500).json({mensagem:Error:${error.message}});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "buscar",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/unidades/": {
       "get": {
+        "tags": [
+          "Unidades"
+        ],
+        "summary": "Lista as unidades",
         "description": "",
         "parameters": [
           {
@@ -378,80 +774,291 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Unidades retornadas com sucesso.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "nome": {
+                    "type": "string",
+                    "example": "Unidade Central"
+                  },
+                  "endereco": {
+                    "type": "string",
+                    "example": "Rua A"
+                  },
+                  "horario": {
+                    "type": "string",
+                    "example": "08:00 - 18:00"
+                  },
+                  "telefone": {
+                    "type": "string",
+                    "example": "11999999999"
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
       "post": {
+        "tags": [
+          "Unidades"
+        ],
+        "summary": "Cria uma unidade",
         "description": "",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nome": {
+                  "type": "string",
+                  "example": "Unidade Central"
+                },
+                "endereco": {
+                  "type": "string",
+                  "example": "Rua A"
+                },
+                "horario": {
+                  "type": "string",
+                  "example": "08:00 - 18:00"
+                },
+                "telefone": {
+                  "type": "string",
+                  "example": "11999999999"
+                }
+              },
+              "required": [
+                "nome",
+                "endereco",
+                "horario",
+                "telefone"
+              ]
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Falha ao criar registro.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Falha ao criar registro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "201": {
-            "description": "Created"
+            "description": "Registro criado com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro criado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token e obrigatorio ou Token invalido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token invalido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/unidades/{id}": {
       "put": {
+        "tags": [
+          "Unidades"
+        ],
+        "summary": "Atualiza uma unidade",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int32"
           },
           {
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nome": {
+                  "type": "string",
+                  "example": "Unidade Central"
+                },
+                "endereco": {
+                  "type": "string",
+                  "example": "Rua A"
+                },
+                "horario": {
+                  "type": "string",
+                  "example": "08:00 - 18:00"
+                },
+                "telefone": {
+                  "type": "string",
+                  "example": "11999999999"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Falha ao atualizar registro.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Falha ao atualizar registro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "201": {
-            "description": "Created"
+            "description": "Registro atualizado com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro atualizado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token e obrigatorio ou Token invalido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token invalido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
       "delete": {
+        "tags": [
+          "Unidades"
+        ],
+        "summary": "Exclui uma unidade",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int32"
           },
           {
             "name": "authorization",
@@ -461,60 +1068,59 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Registro apagado com sucesso ou Registro ja foi apagado.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro apagado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token e obrigatorio ou Token invalido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token invalido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/unidades/{{where{id:Number(req.params.id)}});res.status(200).json({mensagem:Registroapagadocomsucesso});}else{res.status(200).json({mensagem:Registrojáfoiapagado});}}catch(error){res.status(500).json({mensagem:Error:${error.message}});}}module.exports={buscar}": {
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "{where{id:Number(req.params.id)}});res.status(200).json({mensagem:Registroapagadocomsucesso});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "res.status(200).json({mensagem:Registrojáfoiapagado});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "res.status(500).json({mensagem:Error:${error.message}});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "buscar",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/interessados/": {
       "get": {
+        "tags": [
+          "Interessados"
+        ],
+        "summary": "Lista os interessados",
         "description": "",
         "parameters": [
           {
@@ -525,80 +1131,321 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Interessados retornados com sucesso.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "nome": {
+                    "type": "string",
+                    "example": "Maria Silva"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "maria@email.com"
+                  },
+                  "telefone": {
+                    "type": "string",
+                    "example": "11999999999"
+                  },
+                  "cidade": {
+                    "type": "string",
+                    "example": "Sao Paulo"
+                  },
+                  "estado": {
+                    "type": "string",
+                    "example": "SP"
+                  },
+                  "como": {
+                    "type": "string",
+                    "example": "Instagram"
+                  },
+                  "data": {
+                    "type": "string",
+                    "example": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token e obrigatorio ou Token invalido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token invalido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
       "post": {
+        "tags": [
+          "Interessados"
+        ],
+        "summary": "Cria um interessado",
         "description": "",
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nome": {
+                  "type": "string",
+                  "example": "Maria Silva"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "maria@email.com"
+                },
+                "telefone": {
+                  "type": "string",
+                  "example": "11999999999"
+                },
+                "cidade": {
+                  "type": "string",
+                  "example": "Sao Paulo"
+                },
+                "estado": {
+                  "type": "string",
+                  "example": "SP"
+                },
+                "como": {
+                  "type": "string",
+                  "example": "Instagram"
+                }
+              },
+              "required": [
+                "nome",
+                "email",
+                "telefone",
+                "cidade",
+                "estado",
+                "como"
+              ]
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Falha ao criar registro.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Falha ao criar registro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "201": {
-            "description": "Created"
+            "description": "Registro criado com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro criado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/interessados/{id}": {
       "put": {
+        "tags": [
+          "Interessados"
+        ],
+        "summary": "Atualiza um interessado",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int32"
           },
           {
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nome": {
+                  "type": "string",
+                  "example": "Maria Silva"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "maria@email.com"
+                },
+                "telefone": {
+                  "type": "string",
+                  "example": "11999999999"
+                },
+                "cidade": {
+                  "type": "string",
+                  "example": "Sao Paulo"
+                },
+                "estado": {
+                  "type": "string",
+                  "example": "SP"
+                },
+                "como": {
+                  "type": "string",
+                  "example": "Instagram"
+                }
+              }
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Falha ao atualizar registro.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Falha ao atualizar registro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "201": {
-            "description": "Created"
+            "description": "Registro atualizado com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro atualizado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token e obrigatorio ou Token invalido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token invalido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
       "delete": {
+        "tags": [
+          "Interessados"
+        ],
+        "summary": "Exclui um interessado",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int32"
           },
           {
             "name": "authorization",
@@ -608,60 +1455,59 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Registro apagado com sucesso ou Registro ja foi apagado.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro apagado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token e obrigatorio ou Token invalido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token invalido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/interessados/{{where{id:Number(req.params.id)}});res.status(200).json({mensagem:Registroapagadocomsucesso});}else{res.status(200).json({mensagem:Registrojáfoiapagado});}}catch(error){res.status(500).json({mensagem:Error:${error.message}});}}module.exports={buscar}": {
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "{where{id:Number(req.params.id)}});res.status(200).json({mensagem:Registroapagadocomsucesso});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "res.status(200).json({mensagem:Registrojáfoiapagado});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "res.status(500).json({mensagem:Error:${error.message}});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "buscar",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/depoimentos/": {
       "get": {
+        "tags": [
+          "Depoimentos"
+        ],
+        "summary": "Lista os depoimentos",
         "description": "",
         "parameters": [
           {
@@ -672,23 +1518,98 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Depoimentos retornados com sucesso.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "nome": {
+                    "type": "string",
+                    "example": "Maria Silva"
+                  },
+                  "imagem": {
+                    "type": "string",
+                    "example": "http://localhost:8000/uploads/depoimentos/maria.jpg"
+                  },
+                  "texto": {
+                    "type": "string",
+                    "example": "Excelente atendimento."
+                  },
+                  "estrelas": {
+                    "type": "number",
+                    "example": 5
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
       "post": {
+        "tags": [
+          "Depoimentos"
+        ],
+        "summary": "Cria um depoimento",
         "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "nome",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "maxLength": 50
+          },
+          {
+            "name": "texto",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "estrelas",
+            "in": "formData",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "imagem",
+            "in": "formData",
+            "type": "file"
           },
           {
             "name": "body",
@@ -711,34 +1632,115 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Falha ao criar registro.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Falha ao criar registro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "201": {
-            "description": "Created"
+            "description": "Registro criado com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro criado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token e obrigatorio ou Token invalido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token invalido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/depoimentos/{id}": {
       "post": {
+        "tags": [
+          "Depoimentos"
+        ],
+        "summary": "Atualiza um depoimento",
         "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int32"
           },
           {
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "nome",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "maxLength": 50
+          },
+          {
+            "name": "texto",
+            "in": "formData",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "estrelas",
+            "in": "formData",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "imagem",
+            "in": "formData",
+            "type": "file"
           },
           {
             "name": "body",
@@ -761,27 +1763,80 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Falha ao atualizar registro.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Falha ao atualizar registro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "201": {
-            "description": "Created"
+            "description": "Registro atualizado com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro atualizado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token e obrigatorio ou Token invalido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token invalido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
       "delete": {
+        "tags": [
+          "Depoimentos"
+        ],
+        "summary": "Exclui um depoimento",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int32"
           },
           {
             "name": "authorization",
@@ -791,60 +1846,59 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Registro apagado com sucesso ou Registro ja foi apagado.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro apagado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token e obrigatorio ou Token invalido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token invalido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/depoimentos/{{where{id:Number(req.params.id)}});res.status(200).json({mensagem:Registroapagadocomsucesso});}else{res.status(200).json({mensagem:Registrojáfoiapagado});}}catch(error){res.status(500).json({mensagem:Error:${error.message}});}}module.exports={buscar}": {
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "{where{id:Number(req.params.id)}});res.status(200).json({mensagem:Registroapagadocomsucesso});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "res.status(200).json({mensagem:Registrojáfoiapagado});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "res.status(500).json({mensagem:Error:${error.message}});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "buscar",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/produtos/": {
       "get": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Lista os produtos",
         "description": "",
         "parameters": [
           {
@@ -855,23 +1909,101 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Produtos retornados com sucesso.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "nome": {
+                    "type": "string",
+                    "example": "Cafe"
+                  },
+                  "imagem": {
+                    "type": "string",
+                    "example": "http://localhost:8000/uploads/produtos/cafe.jpg"
+                  },
+                  "categoria_id": {
+                    "type": "number",
+                    "example": 1
+                  },
+                  "categorias": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "nome": {
+                        "type": "string",
+                        "example": "Bebidas"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
             "description": "Unauthorized"
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
       "post": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Cria um produto",
         "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "nome",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "maxLength": 30
+          },
+          {
+            "name": "categoria_id",
+            "in": "formData",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "imagem",
+            "in": "formData",
+            "type": "file"
           },
           {
             "name": "body",
@@ -891,34 +2023,109 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Falha ao criar registro.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Falha ao criar registro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "201": {
-            "description": "Created"
+            "description": "Registro criado com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro criado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token e obrigatorio ou Token invalido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token invalido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
     },
     "/produtos/{id}": {
       "post": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Atualiza um produto",
         "description": "",
+        "consumes": [
+          "multipart/form-data"
+        ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int32"
           },
           {
             "name": "authorization",
             "in": "header",
             "type": "string"
+          },
+          {
+            "name": "nome",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "maxLength": 30
+          },
+          {
+            "name": "categoria_id",
+            "in": "formData",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "imagem",
+            "in": "formData",
+            "type": "file"
           },
           {
             "name": "body",
@@ -938,27 +2145,80 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Falha ao atualizar registro.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Falha ao atualizar registro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "201": {
-            "description": "Created"
+            "description": "Registro atualizado com sucesso.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro atualizado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token e obrigatorio ou Token invalido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token invalido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       },
       "delete": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Exclui um produto",
         "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "format": "int32"
           },
           {
             "name": "authorization",
@@ -968,54 +2228,49 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Registro apagado com sucesso ou Registro ja foi apagado.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Registro apagado com sucesso"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Token e obrigatorio ou Token invalido.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Token invalido"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
-          }
-        }
-      }
-    },
-    "/produtos/{{where{id:Number(req.params.id)}});res.status(200).json({mensagem:Registroapagadocomsucesso});}else{res.status(200).json({mensagem:Registrojáfoiapagado});}}catch(error){res.status(500).json({mensagem:Error:${error.message}});}}module.exports={buscar}": {
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "{where{id:Number(req.params.id)}});res.status(200).json({mensagem:Registroapagadocomsucesso});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "res.status(200).json({mensagem:Registrojáfoiapagado});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "res.status(500).json({mensagem:Error:${error.message}});",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "buscar",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "authorization",
-            "in": "header",
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "401": {
-            "description": "Unauthorized"
+            "description": "Erro interno do servidor.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mensagem": {
+                  "type": "string",
+                  "example": "Error: mensagem do erro"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         }
       }
